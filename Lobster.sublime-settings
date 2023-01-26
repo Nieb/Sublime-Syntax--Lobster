@@ -1,3 +1,5 @@
 {
     "extensions": [ "lobster" ],
+
+    //"LobsterBin": "bin\\lobster.exe",
 }
