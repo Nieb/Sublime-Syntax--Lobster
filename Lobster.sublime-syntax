@@ -51,9 +51,7 @@ contexts:
         - include: Operators_Bitwise
         - include: Operators_Logical
 
-        - include: Punctuation_Separators
-        - include: Punctuation_StructAccessor
-        - include: Punctuation_StatementTerminator
+        - include: Punctuation
 
         - include: Variables_BuiltIn
 
@@ -293,26 +291,17 @@ contexts:
 
     ###########################################################################################################################################
     ###########################################################################################################################################
-    Punctuation_Separators:
-        - match: |-
-            (?x)
-            (
-              \:
-            | \,
-            )
+    Punctuation:
+        - match: \.
+          scope: punctuation.accessor.lobster
+
+
+        - match: (\:|\,)
           scope: punctuation.separator.lobster
 
 
-    #======================================================================================================================================
-    Punctuation_StatementTerminator:
         - match: \;
           scope: punctuation.terminator.lobster
-
-
-    #======================================================================================================================================
-    Punctuation_StructAccessor:
-        - match: \.
-          scope: punctuation.accessor.lobster
 
 
     ###########################################################################################################################################
@@ -393,7 +382,7 @@ contexts:
             #  scope: invalid.illegal.character.lobster
 
             #  END--Strings
-            - match: \"
+            - match: \"|\n
               scope: punctuation.definition.string.end.lobster
               pop: true
 
