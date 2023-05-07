@@ -410,7 +410,7 @@ contexts:
     ###########################################################################################################################################
     Constants_BuiltIn:
         - match: \b(nil)\b
-          scope: constant.language.lobster
+          scope: constant.language.nil.lobster
 
 
     #======================================================================================================================================
@@ -702,28 +702,65 @@ contexts:
             | im_add_font
             | im_button
             | im_checkbox
+            | im_child_end
+            | im_child_start
+            | im_close_current_popup
             | im_coloredit
             | im_combo
             | im_disabled_end
             | im_disabled_start
+            | im_dockspace_over_viewport
             | im_edit_anything
             | im_frame_end
             | im_frame_start
+            | im_get_content_region_avail
+            | im_get_layout_pos
             | im_graph
             | im_group_end
             | im_group_start
+            | im_id_end
+            | im_id_start
+            | im_image
+            | im_image_button
+            | im_image_mouseclick
             | im_init
             | im_input_float
+            | im_input_int
             | im_input_text
             | im_listbox
+            | im_menu_bar_end
+            | im_menu_bar_start
+            | im_menu_end
+            | im_menu_item
+            | im_menu_item_toggle
+            | im_menu_start
+            | im_new_line
+            | im_next_window_pos
+            | im_next_window_size
+            | im_popup_end
+            | im_popup_open
+            | im_popup_start
             | im_radio
             | im_same_line
+            | im_selectable
             | im_separator
+            | im_set_layout_pos
             | im_show_engine_stats
             | im_show_vars
             | im_sliderfloat
+            | im_sliderfloat2
+            | im_sliderfloat3
+            | im_sliderfloat4
             | im_sliderint
+            | im_sliderint2
+            | im_sliderint3
+            | im_sliderint4
+            | im_tab_bar_end
+            | im_tab_bar_start
+            | im_tab_end
+            | im_tab_start
             | im_text
+            | im_text_wrapped
             | im_tooltip
             | im_treenode_end
             | im_treenode_start
@@ -926,6 +963,252 @@ contexts:
 
     #======================================================================================================================================
     Functions_Module:
+        #  "astar.lobster"
+        - match: |-
+            (?x)
+            \b(
+              astar_2dgrid
+            | astar_clear
+            | astar_distance
+            | astar_generic
+            | astar_goap
+            | astar_graph
+            | goapf
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "camera.lobster"
+        - match: |-
+            (?x)
+            \b(
+              direction
+            | forward_vector
+            | FPS_update
+            | FPS_view
+            | left_vector
+            | set_2d_worldspace
+            | set_z_up_worldspace
+            | set_z_up_worldspace
+            | to_z_up
+            | up_vector
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "color.lobster"
+        - match: |-
+            (?x)
+            \b(
+              from_srgb
+            | to_srgb
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "dictionary.lobster"
+        - match: |-
+            (?x)
+            \b(
+              add
+            | get
+            | get_all
+            | set
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "exception.lobster"
+        - match: |-
+            (?x)
+            \b(
+              exception_handler
+            | protect
+            | throw
+            | throw_if
+            | try
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "floodfillpath.lobster"
+        - match: |-
+            (?x)
+            \b(
+              floodfillpath
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "gl.lobster"
+        - match: |-
+            (?x)
+            \b(
+              gl_blend
+            | gl_color
+            | gl_deltatime_over_time
+            | gl_line_mode
+            | gl_rotate_x
+            | gl_rotate_y
+            | gl_rotate_z
+            | gl_scale
+            | gl_scissor
+            | gl_translate
+            | gl_update_bind_buffer_object
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "gui.lobster"
+        - match: |-
+            (?x)
+            \b(
+              background
+            | backgroundf
+            | blend
+            | border
+            | button
+            | button_id
+            | button_id_image
+            | button_id_text
+            | button_image
+            | button_image_color
+            | button_text
+            | button_text_color
+            | color
+            | custombackground
+            | divider
+            | fontscale
+            | hblock
+            | image
+            | key
+            | margin
+            | multiselect
+            | setactionsfxr
+            | setactionwav
+            | setclickcolors
+            | space
+            | start
+            | text
+            | vblock
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "imgui.lobster"
+        - match: |-
+            (?x)
+            \b(
+              im_child
+            | im_disabled
+            | im_frame
+            | im_group
+            | im_id
+            | im_menu
+            | im_menu_bar
+            | im_popup
+            | im_popup_rmb_prev_item
+            | im_show_stack_traces
+            | im_stack_trace
+            | im_tab
+            | im_tab_bar
+            | im_treenode
+            | im_treenode_open
+            | im_width
+            | im_window
+            | im_window_dock
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "match.lobster"
+        - match: |-
+            (?x)
+            \b(
+              match
+            | match_any
+            | match_elem
+            | match_end
+            | match_not
+            | match_sequence
+            | match_with
+            | matched
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "matrix.lobster"
+        - match: |-
+            (?x)
+            \b(
+              adjugate
+            | determinant
+            | inverse
+            | mat4x4_mv
+            | mat4x4_mvp
+            | mat4x4_p
+            | mat4x4_rotate_x
+            | mat4x4_rotate_y
+            | mat4x4_rotate_z
+            | mat4x4_translation
+            | set_uniform
+            | trace
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "mg.lobster"
+        - match: |-
+            (?x)
+            \b(
+              mg_color
+            | mg_rotate
+            | mg_scale
+            | mg_scale_vec
+            | mg_smooth
+            | mg_translate
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "navmap.lobster"
+        - match: |-
+            (?x)
+            \b(
+              create_nav_map
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "quaternion.lobster"
+        - match: |-
+            (?x)
+            \b(
+              quat_from_2vecs
+            | quat_from_angle_axis
+            | quat_from_euler
+            | quat_from_pitch
+            | quat_from_vec
+            | quat_from_yaw
+            | transform
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
         #  "std.lobster"
         - match: |-
             (?x)
@@ -956,6 +1239,7 @@ contexts:
             | nest_if
             | partition
             | partition_indices
+            | print
             | product
             | qsort
             | qsort_in_place
@@ -964,6 +1248,8 @@ contexts:
             | reduce_reverse
             | return_after
             | reverse
+            | reverse_find
+            | reverse_fold
             | reverse_list
             | reverse_map
             | rnd_pick
@@ -976,7 +1262,44 @@ contexts:
             )
             (?=\()
             \b
-          scope: support.function.lobster
+          scope: support.function.library.lobster
+
+
+        #  "testing.lobster"
+        - match: |-
+            (?x)
+            \b(
+              run_test
+            | testf
+            | testrunnerf
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "texture.lobster"
+        - match: |-
+            (?x)
+            \b(
+              create_depth_texture
+            | loadtexturecached
+            | post_process
+            | render_to_texture
+            | render_to_texture_from
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
+
+        #  "utilui.lobster"
+        - match: |-
+            (?x)
+            \b(
+              ui_rendertextatlocalsize
+            )
+            (?=\()
+            \b
+          scope: support.function.library.lobster
 
         #  "vec.lobster"
         - match: |-
@@ -1014,7 +1337,7 @@ contexts:
             )
             (?=\()
             \b
-          scope: support.function.lobster
+          scope: support.function.library.lobster
 
 
     #======================================================================================================================================
