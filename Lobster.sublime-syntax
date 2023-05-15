@@ -512,8 +512,10 @@ contexts:
             | binary_search
             | binary_search_object
             | breakpoint
+            | call_function_value
             | cardinal_spline
             | ceiling
+            | cg_average_face_colors
             | cg_average_surface_color
             | cg_bounding_box
             | cg_chunks_skipped
@@ -558,6 +560,7 @@ contexts:
             | cross
             | date_time
             | date_time_string
+            | date_time_string_format
             | deepcopy
             | degrees
             | div
@@ -598,14 +601,19 @@ contexts:
             | get_memory_usage
             | get_stack_trace
             | gl_animate_mesh
+            | gl_bind_buffer_object
             | gl_bind_mesh_to_compute
             | gl_blend
             | gl_button
             | gl_circle
             | gl_clear
             | gl_color
+            | gl_copy_buffer_object
             | gl_create_blank_texture
+            | gl_create_colored_texture
             | gl_create_texture
+            | gl_create_time_query
+            | gl_cull_front
             | gl_cursor
             | gl_debug_grid
             | gl_delete_buffer_object
@@ -617,6 +625,7 @@ contexts:
             | gl_end_text_input
             | gl_frame
             | gl_framebuffer_size
+            | gl_generate_texture_mipmap
             | gl_get_char_code
             | gl_get_font_size
             | gl_get_glyph_name
@@ -638,6 +647,7 @@ contexts:
             | gl_mesh_parts
             | gl_mesh_pointsize
             | gl_mesh_size
+            | gl_model_view
             | gl_model_view_projection
             | gl_mouse_delta
             | gl_mouse_pos
@@ -653,6 +663,7 @@ contexts:
             | gl_point_scale
             | gl_polygon
             | gl_pop_model_view
+            | gl_projection
             | gl_push_model_view
             | gl_read_texture
             | gl_rect
@@ -663,7 +674,9 @@ contexts:
             | gl_rotate_x
             | gl_rotate_y
             | gl_rotate_z
+            | gl_rounded_rectangle
             | gl_save_mesh
+            | gl_scale
             | gl_scale
             | gl_scaling
             | gl_scissor
@@ -677,11 +690,14 @@ contexts:
             | gl_set_shader
             | gl_set_shader
             | gl_set_text_input
+            | gl_set_texture_flags
             | gl_set_uniform
             | gl_set_uniform_array
             | gl_set_uniform_matrix
             | gl_shutdown
             | gl_start_text_input
+            | gl_start_time_query
+            | gl_stop_time_query
             | gl_switch_to_framebuffer
             | gl_text
             | gl_text_input_state
@@ -693,6 +709,7 @@ contexts:
             | gl_uniform_buffer_object
             | gl_unit_cube
             | gl_unit_square
+            | gl_update_buffer_object
             | gl_visible
             | gl_window
             | gl_window_min_max
@@ -747,6 +764,7 @@ contexts:
             | im_set_layout_pos
             | im_show_engine_stats
             | im_show_vars
+            | im_slider
             | im_sliderfloat
             | im_sliderfloat2
             | im_sliderfloat3
@@ -781,10 +799,16 @@ contexts:
             | load_sfxr
             | load_wav
             | log
+            | log2
             | lowercase
             | magnitude
             | magnitude_squared
             | manhattan
+            | matrix_multiply
+            | matrix_rotate_x
+            | matrix_rotate_y
+            | matrix_rotate_z
+            | matrix_translation
             | max
             | mg_color
             | mg_convert_to_cubes
@@ -869,6 +893,7 @@ contexts:
             | remove
             | remove_obj
             | remove_range
+            | rename_file
             | repeat_string
             | replace_string
             | rnd
@@ -881,6 +906,8 @@ contexts:
             | scan_folder
             | seconds_elapsed
             | set_console
+            | set_exit_code
+            | set_output_level
             | set_print_decimals
             | set_print_depth
             | set_print_indent
@@ -888,13 +915,13 @@ contexts:
             | set_print_quoted
             | sign
             | simplex
+            | simplex_raw
             | sin
             | sincos
             | slice
             | smootherstep
             | smoothmin
             | smoothstep
-            | sound
             | sound_halt
             | sound_pause
             | sound_position
@@ -916,12 +943,19 @@ contexts:
             | string_to_unicode
             | substring
             | tan
+            | text_to_speech
             | thread_information
             | thread_read
             | thread_write
             | tokenize
             | top
             | trace_bytecode
+            | type_element_string
+            | type_field_count
+            | type_field_name
+            | type_field_string
+            | type_field_value
+            | type_string
             | unicode_to_string
             | uppercase
             | vector_capacity
@@ -1263,7 +1297,6 @@ contexts:
             (?=\()
             \b
           scope: support.function.library.lobster
-
 
         #  "testing.lobster"
         - match: |-
