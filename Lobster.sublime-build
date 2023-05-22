@@ -1,6 +1,7 @@
 {
-    "cmd": [ "bin\\lobster.exe", "$file" ],
     "selector": "source.lobster",
+
+    "cmd": [ "bin\\lobster.exe", "$file" ],
     "target": "lobster_exec",
     "file_regex": "^(.*)\\(([0-9]*)\\):\\serror:\\s()(.*)$",
 }
