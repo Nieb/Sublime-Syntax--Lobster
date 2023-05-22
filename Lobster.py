@@ -12,24 +12,25 @@ class ProcessListener(object):
     def on_finished(self, proc):
         pass
 
-# Encapsulates subprocess.Popen, forwarding stdout to a supplied
-# ProcessListener (on a separate thread)
+###############################################################################################################################################################
+###############################################################################################################################################################
+#  Encapsulates "subprocess.Popen"
+#  forwarding stdout to a supplied "ProcessListener" (on a separate thread)
 class AsyncProcess(object):
-    def __init__(self, cmd, shell_cmd, env, listener,
-            # "path" is an option in build systems
-            path="",
-            # "shell" is an options in build systems
-            shell=False):
+    #==================================================================================================================================================
+    def __init__(self,
+                 cmd,
+                 shell_cmd,
+                 env,
+                 listener,
+                 path  = "",     # Options in build system.
+                 shell = False): # ""
 
-        if not shell_cmd and not cmd:
-            raise ValueError("shell_cmd or cmd is required")
+        if not shell_cmd and not cmd:                    raise ValueError("shell_cmd or cmd is required")
+        if shell_cmd and not isinstance(shell_cmd, str): raise ValueError("shell_cmd must be a string")
 
-        if shell_cmd and not isinstance(shell_cmd, str):
-            raise ValueError("shell_cmd must be a string")
-
-        self.listener = listener
-        self.killed = False
-
+        self.listener   = listener
+        self.killed     = False
         self.start_time = time.time()
 
         # Hide the console window on Windows
@@ -78,6 +79,7 @@ class AsyncProcess(object):
         if self.proc.stderr:
             threading.Thread(target=self.read_stderr).start()
 
+    #==================================================================================================================================================
     def kill(self):
         if not self.killed:
             self.killed = True
@@ -121,12 +123,23 @@ class AsyncProcess(object):
                 self.proc.stderr.close()
                 break
 
+
+###############################################################################################################################################################
+###############################################################################################################################################################
 class LobsterExecCommand(sublime_plugin.WindowCommand, ProcessListener):
-    def run(self, cmd = None, shell_cmd = None, file_regex = "", line_regex = "", working_dir = "",
-            encoding = "utf-8", env = {}, quiet = False, kill = False,
-            word_wrap = True, syntax = "Packages/Text/Plain text.tmLanguage",
-            # Catches "path" and "shell"
-            **kwargs):
+    def run(self,
+            cmd         = None,    # Options in build system.
+            shell_cmd   = None,    # ""
+            file_regex  = "",      # ""
+            line_regex  = "",      # ""
+            working_dir = "",      # ""
+            encoding    = "utf-8", # ""
+            env         = {},
+            quiet       = False,
+            kill        = False,
+            word_wrap   = True,
+            syntax      = "Packages/Text/Plain text.tmLanguage",
+            **kwargs): # Catches "path" and "shell"
 
         if kill:
             if self.proc:
@@ -139,17 +152,17 @@ class LobsterExecCommand(sublime_plugin.WindowCommand, ProcessListener):
             # Try not to call get_output_panel until the regexes are assigned
             self.output_view = self.window.create_output_panel("exec")
 
-        # Default the to the current files directory if no working directory was given
-        if (working_dir == "" and self.window.active_view()
-                        and self.window.active_view().file_name()):
+        # Default to the current files directory if no working directory was given:
+        if (working_dir == "" and self.window.active_view() and self.window.active_view().file_name()):
             working_dir = os.path.dirname(self.window.active_view().file_name())
 
+        self.output_view.settings().set("result_base_dir", working_dir)
         self.output_view.settings().set("result_file_regex", file_regex)
         self.output_view.settings().set("result_line_regex", line_regex)
-        self.output_view.settings().set("result_base_dir", working_dir)
-        self.output_view.settings().set("word_wrap", word_wrap)
+
         self.output_view.settings().set("line_numbers", False)
         self.output_view.settings().set("gutter", False)
+        self.output_view.settings().set("word_wrap", word_wrap)
         self.output_view.settings().set("scroll_past_end", False)
         self.output_view.assign_syntax(syntax)
 
@@ -158,14 +171,12 @@ class LobsterExecCommand(sublime_plugin.WindowCommand, ProcessListener):
         self.window.create_output_panel("exec")
 
         self.encoding = encoding
-        self.quiet = quiet
+        self.quiet    = quiet
 
         self.proc = None
         if not self.quiet:
-            if shell_cmd:
-                print("Running " + shell_cmd)
-            else:
-                print("Running " + " ".join(cmd))
+            if shell_cmd: print("Running " + shell_cmd)
+            else:         print("Running " + " ".join(cmd))
             sublime.status_message("Building")
 
         show_panel_on_build = sublime.load_settings("Preferences.sublime-settings").get("show_panel_on_build", True)
@@ -203,6 +214,7 @@ class LobsterExecCommand(sublime_plugin.WindowCommand, ProcessListener):
             if not self.quiet:
                 self.append_string(None, "[Finished]")
 
+    #==================================================================================================================================================
     def is_enabled(self, kill = False):
         if kill:
             return hasattr(self, 'proc') and self.proc and self.proc.poll()
