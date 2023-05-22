@@ -15,8 +15,8 @@ contexts:
 
         - include: CompileTimeExecution
 
-        - include: ProgramFlow_Conditional
-        - include: ProgramFlow_Loops
+        - include: Keywords_Conditional
+        - include: Keywords_Loops
 
         - include: Declaration_Class
         - include: Declaration_Enumeration
@@ -117,7 +117,7 @@ contexts:
 
     ###########################################################################################################################################
     ###########################################################################################################################################
-    ProgramFlow_Conditional:
+    Keywords_Conditional:
         - match: (?i)\b(if|elif|else)\b
           scope: keyword.control.conditional.lobster
 
@@ -127,7 +127,7 @@ contexts:
         - match: (?i)\b(switch|case|default)\b
           scope: keyword.control.conditional.lobster
 
-    ProgramFlow_Loops:
+    Keywords_Loops:
         - match: (?i)\b(for|while|do|break)\b
           scope: keyword.control.lobster
 
