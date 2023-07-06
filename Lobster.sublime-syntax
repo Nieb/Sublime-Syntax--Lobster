@@ -17,6 +17,7 @@ contexts:
 
         - include: Keywords_Conditional
         - include: Keywords_Loops
+        - include: Keywords___
 
         - include: Declaration_Class
         - include: Declaration_Enumeration
@@ -104,7 +105,7 @@ contexts:
 
     Declaration_NameSpace:
         - match: (?i)\b(namespace)\b
-          scope: entity.name.namespace.lobster
+          scope: keyword.declaration.namespace.lobster
 
     Declaration_Struct:
         - match: (?i)\b(struct)\b
@@ -113,6 +114,9 @@ contexts:
     Declaration_Variable:
         - match: (?i)\b(var|let)\b
           scope: storage.type.lobster
+
+        - match: (?i)\b(abstract|assert|member|private)\b
+          scope: storage.modifier.lobster
 
 
     ###########################################################################################################################################
@@ -130,6 +134,21 @@ contexts:
     Keywords_Loops:
         - match: (?i)\b(for|while|do|break)\b
           scope: keyword.control.lobster
+
+    Keywords___:
+        - match: |-
+            (?x)
+            \b(
+              attribute
+            | fn
+            | is
+            | program
+            | resource
+            | super
+            | throw_if
+            | typeof
+            )\b
+          scope: keyword.lobster
 
 
     ###########################################################################################################################################
@@ -350,25 +369,33 @@ contexts:
           push:
             - meta_scope: string.quoted.double.lobster
 
-            #- include: StringSubstitution
-            #- include: TextureCommands
-
             #  Escape Characters:
-            - match: \\.
-            #- match: |-
-            #    (?x)
-            #    (
-            #      ( \^  f [\~0-9]{1} )
-            #    | ( \^  n            )
-            #    | ( \^  t            )
-            #    | ( \^ \"            )
-            #    | ( \^ \^            )
-            #    )
+            - match: |-
+                (?x)
+                (\\){1}
+                (
+                  n
+                | t
+                | r
+                | b
+                | f
+                | \"
+                | \'
+                | \\
+                ){1}
               scope: constant.character.escape.lobster
 
             #  Invalid Escape Characters:
-            #- match: (\^.)
-            #  scope: invalid.illegal.character.lobster
+            - match: (\\.)
+              scope: invalid.illegal.character.lobster
+
+            #  Cast to string:
+            - match: \{
+              push:
+                - match: \}
+                  pop: true
+
+                - include: main
 
             #  END--Strings
             - match: \"|\n
@@ -441,37 +468,37 @@ contexts:
             | color_teal
             | color_white
             | color_yellow
-            | xy_0
-            | xy_0i
-            | xy_1
-            | xy_1i
-            | xy_h
-            | xy_x
-            | xy_xi
-            | xy_y
-            | xy_yi
-            | xyz_0
-            | xyz_0i
-            | xyz_1
-            | xyz_1i
-            | xyz_x
-            | xyz_xi
-            | xyz_y
-            | xyz_yi
-            | xyz_z
-            | xyz_zi
-            | xyzw_0
-            | xyzw_0i
-            | xyzw_1
-            | xyzw_1i
-            | xyzw_w
-            | xyzw_wi
-            | xyzw_x
-            | xyzw_xi
-            | xyzw_y
-            | xyzw_yi
-            | xyzw_z
-            | xyzw_zi
+            | int2_0
+            | int2_1
+            | int2_x
+            | int2_y
+            | int3_0
+            | int3_1
+            | int3_x
+            | int3_y
+            | int3_z
+            | int4_0
+            | int4_1
+            | int4_x
+            | int4_y
+            | int4_z
+            | int4_w
+            | float2_0
+            | float2_1
+            | float2_h
+            | float2_x
+            | float2_y
+            | float3_0
+            | float3_1
+            | float3_x
+            | float3_y
+            | float3_z
+            | float4_0
+            | float4_1
+            | float4_x
+            | float4_y
+            | float4_z
+            | float4_w
             )\b
           scope: constant.language.lobster
 
@@ -491,11 +518,9 @@ contexts:
               abs
             | acos
             | all
-            | any
             | append
             | append_into
             | asin
-            | assert
             | atan
             | atan2
             | binary_search
@@ -781,7 +806,6 @@ contexts:
             | int
             | is_worker_thread
             | launch_subprocess
-            | length
             | lerp
             | line_intersect
             | load_ogg
@@ -980,9 +1004,17 @@ contexts:
             | write_int8_le_back
             | write_substring
             | write_substring_back
-            )\b
+            )
+            (?=\()
+            \b
           scope: support.function.lobster
 
+        - match: |-
+            (?x)
+            \b\.(
+              length
+            )\b
+          scope: variable.function.lobster
 
     #======================================================================================================================================
     Functions_Module:
@@ -1398,9 +1430,10 @@ contexts:
         - match: |-
             (?x)
             \b(
-              bool
-            | float
-            | int
+              any
+            | bool
+            | float[2-4]?
+            | int[2-4]?
             | resource
             | string
             | vector
