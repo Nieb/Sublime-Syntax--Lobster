@@ -26,16 +26,16 @@ contexts:
         - include: Declaration_Struct
         - include: Declaration_Variable
 
-        - include: Types_BuiltIn
         - include: Types_Module
+        - include: Types_BuiltIn
 
         - include: Functions_BuiltIn
         - include: Functions_Module
         - include: Functions_Variable
         - include: Functions_User
 
-        - include: Strings_MultiLine
-        - include: Strings
+        - include: String_MultiLine
+        - include: String
 
         - include: Section_Braces
         - include: Section_Brackets
@@ -81,13 +81,11 @@ contexts:
             - match: (\*\/)
               pop: true
 
-
     ###########################################################################################################################################
     ###########################################################################################################################################
     CompileTimeExecution:
         - match: (?i)\b(import|pakfile|from)\b
           scope: keyword.control.import.lobster
-
 
     ###########################################################################################################################################
     ###########################################################################################################################################
@@ -118,11 +116,10 @@ contexts:
         - match: (?i)\b(abstract|assert|member|private)\b
           scope: storage.modifier.lobster
 
-
     ###########################################################################################################################################
     ###########################################################################################################################################
     Keywords_Conditional:
-        - match: (?i)\b(if|elif|else)\b
+        - match: (?i)\b(if|elif|else|guard)\b
           scope: keyword.control.conditional.lobster
 
         - match: (?i)\b(and|or|not)\b
@@ -138,18 +135,19 @@ contexts:
     Keywords___:
         - match: |-
             (?x)
-            \b(
-              attribute
-            | fn
-            | is
-            | program
-            | resource
-            | super
-            | throw_if
-            | typeof
-            )\b
+            \b
+            (
+                  attribute
+                | fn
+                | is
+                | program
+                | resource
+                | super
+                | throw_if
+                | typeof
+            )
+            \b
           scope: keyword.lobster
-
 
     ###########################################################################################################################################
     ###########################################################################################################################################
@@ -189,17 +187,17 @@ contexts:
             )
           scope: constant.numeric.float.lobster
 
-
     #======================================================================================================================================
     Numbers_Hex:
         - match: |-
             (?x)
-            \b(
+            \b
+            (
                 (0x){1}
                 [0-9a-fA-F]+
-            )\b
+            )
+            \b
           scope: constant.numeric.integer.hexadecimal.lobster
-
 
     #======================================================================================================================================
     Numbers_Integer:
@@ -221,81 +219,75 @@ contexts:
             )
           scope: constant.numeric.integer.lobster
 
-
     ###########################################################################################################################################
     ###########################################################################################################################################
     Operators_Arithmetic:
         - match: |-
             (?x)
             (
-              \%
-            | \*
-            | \+
-            | \-
-            | \/
-            | \^
+                  \%
+                | \*
+                | \+
+                | \-
+                | \/
+                | \^
             )
           scope: keyword.operator.arithmetic.lobster
-
 
     #======================================================================================================================================
     Operators_Arrow:
         - match: |-
             (?x)
             (
-              \< \-
-            | \- \>
+                  \< \-
+                | \- \>
             )
           scope: keyword.operator.arrow.lobster
-
 
     #======================================================================================================================================
     Operators_Assignment:
         - match: |-
             (?x)
             (
-              \=
-            | \% \=
-            | \* \=
-            | \+ \+
-            | \+ \=
-            | \- \-
-            | \- \=
-            | \/ \=
-            | \?
+                  \=
+                | \+ \+
+                | \- \-
+                | \+ \=
+                | \- \=
+                | \* \=
+                | \/ \=
+                | \% \=
+                | \?
             )
           scope: keyword.operator.assignment.lobster
-
 
     #======================================================================================================================================
     Operators_Bitwise:
         - match: |-
             (?x)
             (
-              \&
-            | \< \<
-            | \> \>
-            | \^
-            | \|
-            | \~
+                  \&
+                | \|
+                | \^
+                | \~
+                | \< \<
+                | \> \>
             )
           scope: keyword.operator.bitwise.lobster
-
 
     #======================================================================================================================================
     Operators_Logical:
         - match: |-
             (?x)
             (
-              \! \=
-            | \<
-            | \< \=
-            | \= \=
-            | \>
-            | \> \=
+                  \! \=
+                | \= \=
+                | \<
+                | \< \=
+                | \>
+                | \> \=
             )
           scope: keyword.operator.logical.lobster
-
 
     ###########################################################################################################################################
     ###########################################################################################################################################
@@ -303,14 +295,11 @@ contexts:
         - match: \.
           scope: punctuation.accessor.lobster
 
-
         - match: (\:|\,)
           scope: punctuation.separator.lobster
 
-
         - match: \;
           scope: punctuation.terminator.lobster
-
 
     ###########################################################################################################################################
     ###########################################################################################################################################
@@ -326,7 +315,6 @@ contexts:
 
             - include: main
 
-
     #======================================================================================================================================
     Section_Brackets:
         - match: \[
@@ -339,7 +327,6 @@ contexts:
               pop: true
 
             - include: main
-
 
     #======================================================================================================================================
     Section_Parentheses:
@@ -354,16 +341,14 @@ contexts:
 
             - include: main
 
-
     #======================================================================================================================================
     Section_Strays:
         - match: \}|\]|\)
           scope: invalid.illegal.stray.lobster
 
-
     ###########################################################################################################################################
     ###########################################################################################################################################
-    Strings:
+    String:
         - match: \"(?=.*\")
           scope: punctuation.definition.string.begin.lobster
           push:
@@ -374,14 +359,14 @@ contexts:
                 (?x)
                 (\\){1}
                 (
-                  n
-                | t
-                | r
-                | b
-                | f
-                | \"
-                | \'
-                | \\
+                      n
+                    | t
+                    | r
+                    | b
+                    | f
+                    | \"
+                    | \'
+                    | \\
                 ){1}
               scope: constant.character.escape.lobster
 
@@ -391,30 +376,35 @@ contexts:
 
             #  Cast to string:
             - match: \{
+              scope: constant.other.placeholder.lobster
               push:
                 - match: \}
+                  scope: constant.other.placeholder.lobster
                   pop: true
 
                 - include: main
 
-            #  END--Strings
-            - match: \"|\n
+            #  END--String - Missing closing quote!
+            - match: \n
+              scope: invalid.illegal.character.lobster
+              pop: true
+
+            #  END--String
+            - match: \"
               scope: punctuation.definition.string.end.lobster
               pop: true
 
-
     #======================================================================================================================================
-    Strings_MultiLine:
+    String_MultiLine:
         - match: (\"\"\")
           scope: punctuation.definition.string.begin.lobster
           push:
             - meta_scope: string.quoted.triple.lobster
 
-            #  END--Strings
+            #  END--String_MultiLine
             - match: (\"\"\")
               scope: punctuation.definition.string.end.lobster
               pop: true
-
 
     ###########################################################################################################################################
     ###########################################################################################################################################
@@ -428,78 +418,270 @@ contexts:
         - match: \b(nil)\b
           scope: constant.language.nil.lobster
 
-
     #======================================================================================================================================
     Constants_Module:
         - match: |-
             (?x)
-            \b(
-              true
-            | false
-            | color_black
-            | color_blue
-            | color_blue_violet
-            | color_chartreuse
-            | color_clear
-            | color_cyan
-            | color_dark_blue
-            | color_dark_green
-            | color_dark_grey
-            | color_dark_red
-            | color_darkest_grey
-            | color_dodgerblue
-            | color_green
-            | color_grey
-            | color_light_blue
-            | color_light_cyan
-            | color_light_green
-            | color_light_grey
-            | color_light_pink
-            | color_light_red
-            | color_light_yellow
-            | color_lightest_grey
-            | color_olive
-            | color_orange
-            | color_pink
-            | color_pink_violet
-            | color_purple
-            | color_red
-            | color_springgreen
-            | color_teal
-            | color_white
-            | color_yellow
-            | int2_0
-            | int2_1
-            | int2_x
-            | int2_y
-            | int3_0
-            | int3_1
-            | int3_x
-            | int3_y
-            | int3_z
-            | int4_0
-            | int4_1
-            | int4_x
-            | int4_y
-            | int4_z
-            | int4_w
-            | float2_0
-            | float2_1
-            | float2_h
-            | float2_x
-            | float2_y
-            | float3_0
-            | float3_1
-            | float3_x
-            | float3_y
-            | float3_z
-            | float4_0
-            | float4_1
-            | float4_x
-            | float4_y
-            | float4_z
-            | float4_w
-            )\b
+            \b
+            (
+                  true
+                | false
+                | color_clear
+                | color_black
+                | color_darkest_grey
+                | color_dark_grey
+                | color_grey
+                | color_light_grey
+                | color_lightest_grey
+                | color_white
+                | color_dark_red
+                | color_red
+                | color_light_red
+                | color_orange
+                | color_yellow
+                | color_light_yellow
+                | color_dark_green
+                | color_green
+                | color_light_green
+                | color_cyan
+                | color_light_cyan
+                | color_dark_blue
+                | color_blue
+                | color_light_blue
+                | color_purple
+                | color_pink
+                | color_light_pink
+                | color_springgreen
+                | color_olive
+                | color_chartreuse
+                | color_teal
+                | color_dodgerblue
+                | color_blue_violet
+                | color_pink_violet
+            )
+            \b
+          scope: constant.language.lobster
+
+
+        #  "gl.lobster"
+        - match: |-
+            (?x)
+            \b
+            gl.
+            (
+                  window_init_fullscreen
+                | window_init_no_vsync
+                | window_init_linear_color
+                | window_init_native
+                | window_init_maximized
+            )
+            \b
+          scope: constant.language.lobster
+
+
+        #  "imgui.lobster -- im.init()"
+        - match: |-
+            (?x)
+            \b
+            im.
+            (
+                  config_none
+                | config_nav_enable_keyboard
+                | config_nav_enable_gamepad
+                | config_nav_enable_set_mouse_pos
+                | config_nav_no_capture_keyboard
+                | config_no_mouse
+                | config_no_mouse_cursor_change
+                | config_docking_enable
+                | config_viewport_enable
+                | config_dpi_enable_scale_viewports
+                | config_dpi_enable_scale_fonts
+                | config_is_srgb
+                | config_is_touch_screen
+            )
+            \b
+          scope: constant.language.lobster
+
+        #  "imgui.lobster -- im.window()"
+        - match: |-
+            (?x)
+            \b
+            im.
+            (
+                  window_none
+                | window_no_titlebar
+                | window_no_resize
+                | window_no_move
+                | window_no_scrollbar
+                | window_no_scroll_with_mouse
+                | window_no_collapse
+                | window_always_autoresize
+                | window_no_background
+                | window_no_saved_settings
+                | window_no_mouse_inputs
+                | window_menubar
+                | window_horizontal_scrollbar
+                | window_no_focus_on_appearing
+                | window_no_bringtofront_on_focus
+                | window_always_vertical_scrollbar
+                | window_always_horizontal_scrollbar
+                | window_always_use_window_padding
+                | window_UNUSED1
+                | window_no_nav_inputs
+                | window_no_nav_focus
+                | window_unsaved_document
+                | window_no_docking
+            )
+            \b
+          scope: constant.language.lobster
+
+        #  "imgui.lobster -- im.treenode()"
+        - match: |-
+            (?x)
+            \b
+            im.
+            (
+                  treenode_none
+                | treenode_selected
+                | treenode_framed
+                | treenode_allow_item_overlap
+                | treenode_no_tree_push_on_open
+                | treenode_no_auto_open_on_log
+                | treenode_default_open
+                | treenode_open_on_double_click
+                | treenode_open_on_arrow
+                | treenode_leaf
+                | treenode_bullet
+                | treenode_frame_padding
+                | treenode_span_avail_width
+                | treenode_span_full_width
+            )
+            \b
+          scope: constant.language.lobster
+
+        #  "imgui.lobster -- im.tabitem()"
+        - match: |-
+            (?x)
+            \b
+            im.
+            (
+                  tabitem_none
+                | tabitem_unsaved_document
+                | tabitem_set_selected
+                | tabitem_no_close_with_middle_mouse_button
+                | tabitem_no_push_id
+                | tabitem_no_tooltip
+                | tabitem_no_reorder
+                | tabitem_leading
+                | tabitem_trailing
+            )
+            \b
+          scope: constant.language.lobster
+
+        #  "imgui.lobster -- im.drag_drop()"
+        - match: |-
+            (?x)
+            \b
+            im.
+            (
+                  drag_drop_none
+                | drag_drop_source_no_preview_tooltip
+                | drag_drop_source_no_disable_hover
+                | drag_drop_source_no_hold_to_open_others
+                | drag_drop_source_allow_null_id
+                | drag_drop_source_extern
+                | drag_drop_source_auto_expire_payload
+                | drag_drop_accept_before_delivery
+                | drag_drop_accept_no_draw_default_rect
+                | drag_drop_accept_no_preview_tooltip
+            )
+            \b
+          scope: constant.language.lobster
+
+        #  "imgui.lobster -- im.color_idx()"
+        - match: |-
+            (?x)
+            \b
+            im.
+            (
+                  col_text
+                | col_text_disabled
+                | col_window_bg
+                | col_child_bg
+                | col_popup_bg
+                | col_border
+                | col_border_shadow
+                | col_frame_bg
+                | col_frame_bg_hovered
+                | col_frame_bg_active
+                | col_title_bg
+                | col_title_bg_active
+                | col_title_bg_collapsed
+                | col_menubar_bg
+                | col_scrollbar_bg
+                | col_scrollbar_grab
+                | col_scrollbar_grab_hovered
+                | col_scrollbar_grab_active
+                | col_check_mark
+                | col_slider_grab
+                | col_slider_grab_active
+                | col_button
+                | col_button_hovered
+                | col_button_active
+                | col_header
+                | col_header_hovered
+                | col_header_active
+                | col_separator
+                | col_separator_hovered
+                | col_separator_active
+                | col_resize_grip
+                | col_resize_grip_hovered
+                | col_resize_grip_active
+                | col_tab
+                | col_tab_hovered
+                | col_tab_active
+                | col_tab_unfocused
+                | col_tab_unfocused_active
+                | col_docking_preview
+                | col_docking_empty_bg
+                | col_plot_lines
+                | col_plot_lines_hovered
+                | col_plot_histogram
+                | col_plot_histogram_hovered
+                | col_table_header_bg
+                | col_table_border_strong
+                | col_table_border_light
+                | col_table_row_bg
+                | col_table_row_bg_alt
+                | col_text_selected_bg
+                | col_drag_drop_target
+                | col_nav_highlight
+                | col_nav_windowing_highlight
+                | col_nav_windowing_dim_bg
+                | col_modal_window_dim_bg
+                | col_COUNT
+            )
+            \b
+          scope: constant.language.lobster
+
+
+        #  "vec.lobster"
+        - match: |-
+            (?x)
+            \b
+            (
+                  cardinal_directions
+                | diagonal_directions
+                | octant_directions
+                | positive_directions
+                | float2_[01hxy]
+                | float3_[01xyz]
+                | float4_[01wxyz]
+                | int2_[01xy]
+                | int3_[01xyz]
+                | int4_[01wxyz]
+            )
+            \b
           scope: constant.language.lobster
 
 
@@ -512,508 +694,630 @@ contexts:
     ###########################################################################################################################################
     ###########################################################################################################################################
     Functions_BuiltIn:
+        #  "audio.cpp"
         - match: |-
             (?x)
-            \b(
-              abs
-            | acos
-            | all
-            | append
-            | append_into
-            | asin
-            | atan
-            | atan2
-            | binary_search
-            | binary_search_object
-            | breakpoint
-            | call_function_value
-            | cardinal_spline
-            | ceiling
-            | cg_average_face_colors
-            | cg_average_surface_color
-            | cg_bounding_box
-            | cg_chunks_skipped
-            | cg_clone
-            | cg_color_to_palette
-            | cg_copy
-            | cg_copy_palette
-            | cg_create_3d_texture
-            | cg_create_mesh
-            | cg_erode
-            | cg_get
-            | cg_get_buf
-            | cg_get_palette_storage_buf
-            | cg_get_palette_storage_len
-            | cg_init
-            | cg_load_image
-            | cg_load_vox
-            | cg_name
-            | cg_normal_indices
-            | cg_num_solid
-            | cg_offset
-            | cg_palette_storage_index
-            | cg_palette_to_color
-            | cg_randomize
-            | cg_rotate
-            | cg_sample_down
-            | cg_save_vox
-            | cg_scale_up
-            | cg_set
-            | cg_simplex
-            | cg_size
-            | cg_stretch
-            | circles_within_range
-            | clamp
-            | command_line_arguments
-            | compare_substring
-            | compile_run_code
-            | compile_run_file
-            | concat_string
-            | copy
-            | cos
-            | cross
-            | date_time
-            | date_time_string
-            | date_time_string_format
-            | deepcopy
-            | degrees
-            | div
-            | dot
-            | ensure_size
-            | equal
-            | escape_string
-            | find_string
-            | find_string_reverse
-            | flatbuffers_binary_to_json
-            | flatbuffers_field_float32
-            | flatbuffers_field_float64
-            | flatbuffers_field_int16
-            | flatbuffers_field_int32
-            | flatbuffers_field_int64
-            | flatbuffers_field_int8
-            | flatbuffers_field_present
-            | flatbuffers_field_string
-            | flatbuffers_field_struct
-            | flatbuffers_field_table
-            | flatbuffers_field_uint16
-            | flatbuffers_field_uint32
-            | flatbuffers_field_uint64
-            | flatbuffers_field_uint8
-            | flatbuffers_field_vector
-            | flatbuffers_field_vector_len
-            | flatbuffers_indirect
-            | flatbuffers_json_to_binary
-            | flatbuffers_string
-            | flexbuffers_binary_to_json
-            | flexbuffers_binary_to_value
-            | flexbuffers_json_to_binary
-            | flexbuffers_value_to_binary
-            | float
-            | floor
-            | fraction
-            | get_line
-            | get_memory_usage
-            | get_stack_trace
-            | gl_animate_mesh
-            | gl_bind_buffer_object
-            | gl_bind_mesh_to_compute
-            | gl_blend
-            | gl_button
-            | gl_circle
-            | gl_clear
-            | gl_color
-            | gl_copy_buffer_object
-            | gl_create_blank_texture
-            | gl_create_colored_texture
-            | gl_create_texture
-            | gl_create_time_query
-            | gl_cull_front
-            | gl_cursor
-            | gl_debug_grid
-            | gl_delete_buffer_object
-            | gl_delta_time
-            | gl_dispatch_compute
-            | gl_dpi
-            | gl_dropped_file
-            | gl_dump_shader
-            | gl_end_text_input
-            | gl_frame
-            | gl_framebuffer_size
-            | gl_generate_texture_mipmap
-            | gl_get_char_code
-            | gl_get_font_size
-            | gl_get_glyph_name
-            | gl_get_outline_size
-            | gl_get_shader
-            | gl_grab
-            | gl_hit
-            | gl_joy_axis
-            | gl_key_repeat
-            | gl_last_pos
-            | gl_last_time
-            | gl_light
-            | gl_line
-            | gl_line_mode
-            | gl_load_materials
-            | gl_load_texture
-            | gl_local_last_pos
-            | gl_local_mouse_pos
-            | gl_mesh_parts
-            | gl_mesh_pointsize
-            | gl_mesh_size
-            | gl_model_view
-            | gl_model_view_projection
-            | gl_mouse_delta
-            | gl_mouse_pos
-            | gl_mousewheel_delta
-            | gl_new_mesh
-            | gl_new_mesh_iqm
-            | gl_new_poly
-            | gl_open_circle
-            | gl_origin
-            | gl_ortho
-            | gl_ortho3d
-            | gl_perspective
-            | gl_point_scale
-            | gl_polygon
-            | gl_pop_model_view
-            | gl_projection
-            | gl_push_model_view
-            | gl_read_texture
-            | gl_rect
-            | gl_rect_tc_col
-            | gl_render_mesh
-            | gl_render_tiles
-            | gl_require_version
-            | gl_rotate_x
-            | gl_rotate_y
-            | gl_rotate_z
-            | gl_rounded_rectangle
-            | gl_save_mesh
-            | gl_scale
-            | gl_scale
-            | gl_scaling
-            | gl_scissor
-            | gl_screenshot
-            | gl_set_font_name
-            | gl_set_font_size
-            | gl_set_image_texture
-            | gl_set_max_font_size
-            | gl_set_mesh_texture
-            | gl_set_primitive_texture
-            | gl_set_shader
-            | gl_set_shader
-            | gl_set_text_input
-            | gl_set_texture_flags
-            | gl_set_uniform
-            | gl_set_uniform_array
-            | gl_set_uniform_matrix
-            | gl_shutdown
-            | gl_start_text_input
-            | gl_start_time_query
-            | gl_stop_time_query
-            | gl_switch_to_framebuffer
-            | gl_text
-            | gl_text_input_state
-            | gl_text_size
-            | gl_texture_size
-            | gl_time
-            | gl_touchscreen
-            | gl_translate
-            | gl_uniform_buffer_object
-            | gl_unit_cube
-            | gl_unit_square
-            | gl_update_buffer_object
-            | gl_visible
-            | gl_window
-            | gl_window_min_max
-            | gl_window_size
-            | gl_window_title
-            | hash
-            | im_add_font
-            | im_button
-            | im_checkbox
-            | im_child_end
-            | im_child_start
-            | im_close_current_popup
-            | im_coloredit
-            | im_combo
-            | im_disabled_end
-            | im_disabled_start
-            | im_dockspace_over_viewport
-            | im_edit_anything
-            | im_frame_end
-            | im_frame_start
-            | im_get_content_region_avail
-            | im_get_layout_pos
-            | im_graph
-            | im_group_end
-            | im_group_start
-            | im_id_end
-            | im_id_start
-            | im_image
-            | im_image_button
-            | im_image_mouseclick
-            | im_init
-            | im_input_float
-            | im_input_int
-            | im_input_text
-            | im_listbox
-            | im_menu_bar_end
-            | im_menu_bar_start
-            | im_menu_end
-            | im_menu_item
-            | im_menu_item_toggle
-            | im_menu_start
-            | im_new_line
-            | im_next_window_pos
-            | im_next_window_size
-            | im_popup_end
-            | im_popup_open
-            | im_popup_start
-            | im_radio
-            | im_same_line
-            | im_selectable
-            | im_separator
-            | im_set_layout_pos
-            | im_show_engine_stats
-            | im_show_vars
-            | im_slider
-            | im_sliderfloat
-            | im_sliderfloat2
-            | im_sliderfloat3
-            | im_sliderfloat4
-            | im_sliderint
-            | im_sliderint2
-            | im_sliderint3
-            | im_sliderint4
-            | im_tab_bar_end
-            | im_tab_bar_start
-            | im_tab_end
-            | im_tab_start
-            | im_text
-            | im_text_wrapped
-            | im_tooltip
-            | im_treenode_end
-            | im_treenode_start
-            | im_width_end
-            | im_width_start
-            | im_window_demo
-            | im_window_end
-            | im_window_start
-            | in_range
-            | insert
-            | int
-            | is_worker_thread
-            | launch_subprocess
-            | lerp
-            | line_intersect
-            | load_ogg
-            | load_sfxr
-            | load_wav
-            | log
-            | log2
-            | lowercase
-            | magnitude
-            | magnitude_squared
-            | manhattan
-            | matrix_multiply
-            | matrix_rotate_x
-            | matrix_rotate_y
-            | matrix_rotate_z
-            | matrix_translation
-            | max
-            | mg_color
-            | mg_convert_to_cubes
-            | mg_cube
-            | mg_cylinder
-            | mg_landscape
-            | mg_polygonize
-            | mg_pop_transform
-            | mg_push_transform
-            | mg_rotate
-            | mg_scale
-            | mg_scale_vec
-            | mg_set_color_noise
-            | mg_set_point_mode
-            | mg_set_polygon_reduction
-            | mg_set_vertex_randomize
-            | mg_smooth
-            | mg_sphere
-            | mg_superquadric
-            | mg_superquadric_non_uniform
-            | mg_supertoroid
-            | mg_tapered_cylinder
-            | mg_translate
-            | min
-            | normalize
-            | number_to_string
-            | parse_data
-            | pass
-            | ph_apply_linear_impulse_to_center
-            | ph_create_box
-            | ph_create_circle
-            | ph_create_particle
-            | ph_create_particle_circle
-            | ph_create_polygon
-            | ph_delete_particle
-            | ph_dynamic
-            | ph_get_mass
-            | ph_get_position
-            | ph_getparticle_position
-            | ph_initialize
-            | ph_initialize_particles
-            | ph_particle_contacts
-            | ph_raycast
-            | ph_render
-            | ph_render_particles
-            | ph_set_color
-            | ph_set_linear_velocity
-            | ph_set_shader
-            | ph_set_texture
-            | ph_step
-            | play_ogg
-            | play_sfxr
-            | play_wav
-            | pop
-            | pow
-            | print
-            | program_name
-            | push
-            | radians
-            | read_file
-            | read_float32_le
-            | read_float32_le_back
-            | read_float64_le
-            | read_float64_le_back
-            | read_int16_le
-            | read_int16_le_back
-            | read_int32_le
-            | read_int32_le_back
-            | read_int64_le
-            | read_int64_le_back
-            | read_int8_le
-            | read_int8_le_back
-            | read_uint16_le
-            | read_uint16_le_back
-            | read_uint32_le
-            | read_uint32_le_back
-            | read_uint64_le
-            | read_uint64_le_back
-            | read_uint8_le
-            | read_uint8_le_back
-            | reference_count
-            | remove
-            | remove_obj
-            | remove_range
-            | rename_file
-            | repeat_string
-            | replace_string
-            | rnd
-            | rnd_float
-            | rnd_gaussian
-            | rnd_seed
-            | rndm
-            | rndm_seed
-            | round
-            | scan_folder
-            | seconds_elapsed
-            | set_console
-            | set_exit_code
-            | set_output_level
-            | set_print_decimals
-            | set_print_depth
-            | set_print_indent
-            | set_print_length
-            | set_print_quoted
-            | sign
-            | simplex
-            | simplex_raw
-            | sin
-            | sincos
-            | slice
-            | smootherstep
-            | smoothmin
-            | smoothstep
-            | sound_halt
-            | sound_pause
-            | sound_position
-            | sound_resume
-            | sound_status
-            | sound_volume
-            | sqrt
-            | start_worker_threads
-            | steam_init
-            | steam_overlay
-            | steam_read_file
-            | steam_unlock_achievement
-            | steam_username
-            | steam_write_file
-            | stop_worker_threads
-            | string
-            | string_to_float
-            | string_to_int
-            | string_to_unicode
-            | substring
-            | tan
-            | text_to_speech
-            | thread_information
-            | thread_read
-            | thread_write
-            | tokenize
-            | top
-            | trace_bytecode
-            | type_element_string
-            | type_field_count
-            | type_field_name
-            | type_field_string
-            | type_field_value
-            | type_string
-            | unicode_to_string
-            | uppercase
-            | vector_capacity
-            | vector_to_buffer
-            | vm_compiled_mode
-            | volume
-            | vr_create_motion_controller_mesh
-            | vr_finish
-            | vr_hmd_vec
-            | vr_init
-            | vr_motion_controller
-            | vr_motion_controller_button
-            | vr_motion_controller_vec
-            | vr_motioncontrollerstracking
-            | vr_num_motion_controllers
-            | vr_set_eye_texture
-            | vr_start
-            | vr_start_eye
-            | wave_function_collapse
-            | workers_alive
-            | write_file
-            | write_float32_le
-            | write_float32_le_back
-            | write_float64_le
-            | write_float64_le_back
-            | write_int16_le
-            | write_int16_le_back
-            | write_int32_le
-            | write_int32_le_back
-            | write_int64_le
-            | write_int64_le_back
-            | write_int8_le
-            | write_int8_le_back
-            | write_substring
-            | write_substring_back
+            \b
+            (
+                  load_ogg
+                | load_sfxr
+                | load_wav
+                | play_ogg
+                | play_sfxr
+                | play_wav
+                | sound_halt
+                | sound_pause
+                | sound_position
+                | sound_resume
+                | sound_status
+                | sound_volume
+                | text_to_speech
+                | text_to_speech_stop
             )
             (?=\()
+          scope: support.function.lobster
+
+        #  "builtins.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  abs
+                | acos
+                | all
+                | any
+                | append
+                | append_into
+                | asin
+                | assert
+                | atan
+                | atan2
+                | binary_search
+                | binary_search_object
+                | call_function_value
+                | cardinal_spline
+                | ceiling
+                | circles_within_range
+                | clamp
+                | command_line_arguments
+                | concat_string
+                | copy
+                | cos
+                | cross
+                | date_time
+                | date_time_build_info
+                | date_time_string
+                | date_time_string_format
+                | deepcopy
+                | degrees
+                | div
+                | dot
+                | equal
+                | escape_string
+                | find_string
+                | find_string_reverse
+                | floor
+                | fraction
+                | get_line
+                | get_memory_usage
+                | get_stack_trace
+                | hash
+                | in_range
+                | insert
+                | is_worker_thread
+                | length
+                | lerp
+                | line_intersect
+                | log
+                | log2
+                | lowercase
+                | magnitude
+                | magnitude_squared
+                | manhattan
+                | max
+                | min
+                | multiply
+                | normalize
+                | number_to_string
+                | pass
+                | pop
+                | pow
+                | print
+                | program_name
+                | push
+                | radians
+                | reference_count
+                | remove
+                | remove_obj
+                | remove_range
+                | repeat_string
+                | replace_string
+                | rnd
+                | rnd_float
+                | rnd_gaussian
+                | rnd_seed
+                | rndm
+                | rndm_seed
+                | rotate_x
+                | rotate_y
+                | rotate_z
+                | round
+                | seconds_elapsed
+                | set_console
+                | set_exit_code
+                | set_output_level
+                | set_print_decimals
+                | set_print_depth
+                | set_print_indent
+                | set_print_length
+                | set_print_quoted
+                | sign
+                | sin
+                | sincos
+                | slice
+                | smootherstep
+                | smoothmin
+                | smoothstep
+                | spherical_lerp
+                | sqrt
+                | start_worker_threads
+                | stop_worker_threads
+                | substring
+                | tan
+                | thread_information
+                | thread_read
+                | thread_write
+                | tokenize
+                | top
+                | trace_bytecode
+                | translation
+                | type_element_string
+                | type_field_count
+                | type_field_name
+                | type_field_string
+                | type_field_value
+                | type_string
+                | unicode_to_string
+                | uppercase
+                | vector_capacity
+                | vm_compiled_mode
+                | volume
+                | wave_function_collapse
+                | workers_alive
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "builtins.cpp -- casting"
+        - match: |-
+            (?x)
+            \b
+            (
+                  float
+                | int
+                | string
+                | string_to_float
+                | string_to_int
+                | string_to_unicode
+            )
+            (?=\w*\()
             \b
           scope: support.function.lobster
 
+        #  "compiler.cpp"
         - match: |-
             (?x)
-            \b\.(
-              length
-            )\b
+            \b
+            (
+                  compile_run_code
+                | compile_run_file
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "cubegen.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  average_face_colors
+                | average_surface_color
+                | bounding_box
+                | chunks_skipped
+                | clone
+                | color_to_palette
+                | copy
+                | create_3d_texture
+                | create_mesh
+                | erode
+                | get
+                | get_buf
+                | get_palette
+                | get_palette_storage_buf
+                | get_palette_storage_len
+                | init
+                | load_image
+                | load_palette
+                | load_vox
+                | name
+                | normal_indices
+                | num_solid
+                | offset
+                | palette_storage_index
+                | palette_to_color
+                | randomize
+                | rotate
+                | sample_down
+                | save_vox
+                | scale_up
+                | set
+                | set_palette
+                | simplex
+                | size
+                | stretch
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "file.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  binary_to_json
+                | compare_substring
+                | delete_file
+                | ensure_size
+                | exists_file
+                | field_present
+                | field_string
+                | field_struct
+                | field_table
+                | field_vector
+                | field_vector_len
+                | indirect
+                | json_to_binary
+                | launch_subprocess
+                | read_file
+                | rename_file
+                | scan_folder
+                | string
+                | vector_to_buffer
+                | write_file
+                | write_substring
+                | write_substring_back
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "font.cpp"
+        - match: |-
+            (?x)
+            \b
+            gl.
+            (
+                  get_char_code
+                | get_font_size
+                | get_glyph_name
+                | get_outline_size
+                | set_font_name
+                | set_font_size
+                | set_max_font_size
+                | text
+                | text_size
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "glvr.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  create_motion_controller_mesh
+                | finish
+                | hmd_vec
+                | init
+                | motion_controller
+                | motion_controller_button
+                | motion_controller_vec
+                | motioncontrollerstracking
+                | num_motion_controllers
+                | set_eye_texture
+                | start
+                | start_eye
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "graphics.cpp"
+        - match: |-
+            (?x)
+            \b
+            gl.
+            (
+                  animate_mesh
+                | bind_buffer_object
+                | bind_mesh_to_compute
+                | blend
+                | button
+                | circle
+                | clear
+                | color
+                | copy_buffer_object
+                | create_blank_texture
+                | create_colored_texture
+                | create_texture
+                | create_time_query
+                | cull_front
+                | cursor
+                | debug_grid
+                | delta_time
+                | dispatch_compute
+                | dpi
+                | dropped_file
+                | dump_shader
+                | end_text_input
+                | frame
+                | framebuffer_size
+                | fullscreen
+                | generate_texture_mipmap
+                | get_shader
+                | grab
+                | hit
+                | joy_axis
+                | key_repeat
+                | last_pos
+                | last_time
+                | light
+                | line
+                | line_mode
+                | load_materials
+                | load_texture
+                | local_last_pos
+                | local_mouse_pos
+                | mesh_parts
+                | mesh_pointsize
+                | mesh_size
+                | model_view
+                | model_view_projection
+                | mouse_delta
+                | mouse_pos
+                | mousewheel_delta
+                | new_mesh
+                | new_mesh_iqm
+                | new_poly
+                | open_circle
+                | origin
+                | ortho
+                | ortho3d
+                | perspective
+                | point_scale
+                | polygon
+                | pop_model_view
+                | projection
+                | push_model_view
+                | read_texture
+                | rect
+                | rect_tc_col
+                | render_mesh
+                | render_tiles
+                | require_version
+                | rotate_x
+                | rotate_y
+                | rotate_z
+                | rounded_rectangle
+                | save_mesh
+                | scale
+                | scaling
+                | scissor
+                | screenshot
+                | set_image_texture
+                | set_mesh_texture
+                | set_primitive_texture
+                | set_shader
+                | set_text_input
+                | set_texture_flags
+                | set_uniform
+                | set_uniform_array
+                | set_uniform_matrix
+                | shutdown
+                | start_text_input
+                | start_time_query
+                | stop_time_query
+                | switch_to_framebuffer
+                | text_input_state
+                | texture_size
+                | time
+                | touchscreen
+                | translate
+                | unit_cube
+                | unit_square
+                | update_buffer_object
+                | visible
+                | window
+                | window_min_max
+                | window_size
+                | window_title
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "imbind.cpp"
+        - match: |-
+            (?x)
+            \b
+            im.
+            (
+                  accept_drag_drop_payload
+                | add_font
+                | breakpoint
+                | button
+                | button_repeat_end
+                | button_repeat_start
+                | checkbox
+                | child_end
+                | child_start
+                | close_current_popup
+                | coloredit
+                | combo
+                | disabled_end
+                | disabled_start
+                | dockspace_over_viewport
+                | drag_drop_source_end
+                | drag_drop_source_start
+                | drag_drop_target_end
+                | drag_drop_target_start
+                | edit_anything
+                | frame_end
+                | frame_start
+                | get_content_region_avail
+                | get_layout_pos
+                | graph
+                | group_end
+                | group_start
+                | id_end
+                | id_start
+                | image
+                | image_button
+                | image_mouseclick
+                | init
+                | input_float
+                | input_int
+                | input_text
+                | input_text_multi_line
+                | is_item_deactivated_after_edit
+                | listbox
+                | menu_bar_end
+                | menu_bar_start
+                | menu_end
+                | menu_item
+                | menu_item_toggle
+                | menu_start
+                | new_line
+                | next_window_pos
+                | next_window_size
+                | popup_end
+                | popup_open
+                | popup_start
+                | progress_bar
+                | radio
+                | same_line
+                | selectable
+                | separator
+                | set_drag_drop_payload
+                | set_layout_pos
+                | set_style_color
+                | show_engine_stats
+                | show_vars
+                | slider
+                | sliderfloat
+                | sliderint
+                | tab_bar_end
+                | tab_bar_start
+                | tab_end
+                | tab_start
+                | text
+                | text_styled
+                | text_table
+                | text_wrapped
+                | tooltip
+                | tooltip_multi_end
+                | tooltip_multi_start
+                | treenode_end
+                | treenode_start
+                | width_end
+                | width_start
+                | window_demo
+                | window_end
+                | window_start
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "lobsterreader.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  flexbuffers_binary_to_json
+                | flexbuffers_binary_to_value
+                | flexbuffers_json_to_binary
+                | flexbuffers_value_to_binary
+                | lobster_binary_to_value
+                | lobster_value_to_binary
+                | parse_data
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "meshgen.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  color
+                | convert_to_cubes
+                | cube
+                | cylinder
+                | landscape
+                | polygonize
+                | pop_transform
+                | push_transform
+                | rotate
+                | scale
+                | scale_vec
+                | set_color_noise
+                | set_point_mode
+                | set_polygon_reduction
+                | set_vertex_randomize
+                | smooth
+                | sphere
+                | superquadric
+                | superquadric_non_uniform
+                | supertoroid
+                | tapered_cylinder
+                | translate
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "physics.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  apply_linear_impulse_to_center
+                | create_box
+                | create_circle
+                | create_particle
+                | create_particle_circle
+                | create_polygon
+                | delete_particle
+                | dynamic
+                | get_mass
+                | get_position
+                | getparticle_position
+                | initialize
+                | initialize_particles
+                | particle_contacts
+                | raycast
+                | render
+                | render_particles
+                | set_color
+                | set_linear_velocity
+                | set_shader
+                | set_texture
+                | step
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "simplex.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  simplex
+                | simplex_raw
+            )
+            (?=\()
+          scope: support.function.lobster
+
+        #  "steamworks.cpp"
+        - match: |-
+            (?x)
+            \b
+            (
+                  init
+                | net_identity
+                | overlay
+                | p2p_broadcast_message
+                | p2p_close_listen
+                | p2p_connect
+                | p2p_get_connections
+                | p2p_listen
+                | p2p_receive_messages
+                | p2p_send_message
+                | read_file
+                | shutdown
+                | unlock_achievement
+                | update
+                | username
+                | write_file
+            )
+            (?=\()
+          scope: support.function.lobster
+
+
+        - match: |-
+            (?x)
+            \w
+            \.
+            (
+                length
+            )
+            \b
           scope: variable.function.lobster
 
     #======================================================================================================================================
@@ -1021,33 +1325,34 @@ contexts:
         #  "astar.lobster"
         - match: |-
             (?x)
-            \b(
-              astar_2dgrid
-            | astar_clear
-            | astar_distance
-            | astar_generic
-            | astar_goap
-            | astar_graph
-            | goapf
+            \b
+            (
+                  astar_2dgrid
+                | astar_clear
+                | astar_distance
+                | astar_generic
+                | astar_goap
+                | astar_graph
+                | goapf
             )
             (?=\()
-            \b
           scope: support.function.library.lobster
 
         #  "camera.lobster"
         - match: |-
             (?x)
-            \b(
-              direction
-            | forward_vector
-            | FPS_update
-            | FPS_view
-            | left_vector
-            | set_2d_worldspace
-            | set_z_up_worldspace
-            | set_z_up_worldspace
-            | to_z_up
-            | up_vector
+            \b
+            (
+                  direction
+                | forward_vector
+                | FPS_update
+                | FPS_view
+                | left_vector
+                | set_2d_worldspace
+                | set_z_up_worldspace
+                | set_z_up_worldspace
+                | to_z_up
+                | up_vector
             )
             (?=\()
             \b
@@ -1056,9 +1361,10 @@ contexts:
         #  "color.lobster"
         - match: |-
             (?x)
-            \b(
-              from_srgb
-            | to_srgb
+            \b
+            (
+                  from_srgb
+                | to_srgb
             )
             (?=\()
             \b
@@ -1067,11 +1373,12 @@ contexts:
         #  "dictionary.lobster"
         - match: |-
             (?x)
-            \b(
-              add
-            | get
-            | get_all
-            | set
+            \b
+            (
+                  add
+                | get
+                | get_all
+                | set
             )
             (?=\()
             \b
@@ -1080,12 +1387,13 @@ contexts:
         #  "exception.lobster"
         - match: |-
             (?x)
-            \b(
-              exception_handler
-            | protect
-            | throw
-            | throw_if
-            | try
+            \b
+            (
+                  exception_handler
+                | protect
+                | throw
+                | throw_if
+                | try
             )
             (?=\()
             \b
@@ -1094,8 +1402,9 @@ contexts:
         #  "floodfillpath.lobster"
         - match: |-
             (?x)
-            \b(
-              floodfillpath
+            \b
+            (
+                floodfillpath
             )
             (?=\()
             \b
@@ -1104,55 +1413,56 @@ contexts:
         #  "gl.lobster"
         - match: |-
             (?x)
-            \b(
-              gl_blend
-            | gl_color
-            | gl_deltatime_over_time
-            | gl_line_mode
-            | gl_rotate_x
-            | gl_rotate_y
-            | gl_rotate_z
-            | gl_scale
-            | gl_scissor
-            | gl_translate
-            | gl_update_bind_buffer_object
-            )
-            (?=\()
             \b
+            gl.
+            (
+                  blend
+                | color
+                | deltatime_over_time
+                | line_mode
+                | rotate_x
+                | rotate_y
+                | rotate_z
+                | scale
+                | scissor
+                | translate
+                | update_bind_buffer_object
+            )\b
           scope: support.function.library.lobster
 
         #  "gui.lobster"
         - match: |-
             (?x)
-            \b(
-              background
-            | backgroundf
-            | blend
-            | border
-            | button
-            | button_id
-            | button_id_image
-            | button_id_text
-            | button_image
-            | button_image_color
-            | button_text
-            | button_text_color
-            | color
-            | custombackground
-            | divider
-            | fontscale
-            | hblock
-            | image
-            | key
-            | margin
-            | multiselect
-            | setactionsfxr
-            | setactionwav
-            | setclickcolors
-            | space
-            | start
-            | text
-            | vblock
+            \b
+            (
+                  background
+                | backgroundf
+                | blend
+                | border
+                | button
+                | button_id
+                | button_id_image
+                | button_id_text
+                | button_image
+                | button_image_color
+                | button_text
+                | button_text_color
+                | color
+                | custombackground
+                | divider
+                | fontscale
+                | hblock
+                | image
+                | key
+                | margin
+                | multiselect
+                | setactionsfxr
+                | setactionwav
+                | setclickcolors
+                | space
+                | start
+                | text
+                | vblock
             )
             (?=\()
             \b
@@ -1161,42 +1471,50 @@ contexts:
         #  "imgui.lobster"
         - match: |-
             (?x)
-            \b(
-              im_child
-            | im_disabled
-            | im_frame
-            | im_group
-            | im_id
-            | im_menu
-            | im_menu_bar
-            | im_popup
-            | im_popup_rmb_prev_item
-            | im_show_stack_traces
-            | im_stack_trace
-            | im_tab
-            | im_tab_bar
-            | im_treenode
-            | im_treenode_open
-            | im_width
-            | im_window
-            | im_window_dock
-            )
-            (?=\()
             \b
+            im.
+            (
+                  button_repeat
+                | child
+                | disabled
+                | drag_drop_source
+                | drag_drop_target
+                | frame
+                | group
+                | id
+                | menu
+                | menu
+                | menu_bar
+                | popup
+                | popup_rmb_prev_item
+                | show_stack_traces
+                | stack_trace
+                | tab
+                | tab
+                | tab_bar
+                | tooltip_multi
+                | treenode
+                | treenode_open
+                | treenode_open_if
+                | width
+                | window
+                | window_dock
+            )\b
           scope: support.function.library.lobster
 
         #  "match.lobster"
         - match: |-
             (?x)
-            \b(
-              match
-            | match_any
-            | match_elem
-            | match_end
-            | match_not
-            | match_sequence
-            | match_with
-            | matched
+            \b
+            (
+                  match
+                | match_any
+                | match_elem
+                | match_end
+                | match_not
+                | match_sequence
+                | match_with
+                | matched
             )
             (?=\()
             \b
@@ -1205,19 +1523,20 @@ contexts:
         #  "matrix.lobster"
         - match: |-
             (?x)
-            \b(
-              adjugate
-            | determinant
-            | inverse
-            | mat4x4_mv
-            | mat4x4_mvp
-            | mat4x4_p
-            | mat4x4_rotate_x
-            | mat4x4_rotate_y
-            | mat4x4_rotate_z
-            | mat4x4_translation
-            | set_uniform
-            | trace
+            \b
+            (
+                  adjugate
+                | determinant
+                | inverse
+                | mat4x4_mv
+                | mat4x4_mvp
+                | mat4x4_p
+                | mat4x4_rotate_x
+                | mat4x4_rotate_y
+                | mat4x4_rotate_z
+                | mat4x4_translation
+                | set_uniform
+                | trace
             )
             (?=\()
             \b
@@ -1226,13 +1545,14 @@ contexts:
         #  "mg.lobster"
         - match: |-
             (?x)
-            \b(
-              mg_color
-            | mg_rotate
-            | mg_scale
-            | mg_scale_vec
-            | mg_smooth
-            | mg_translate
+            \b
+            (
+                  mg_color
+                | mg_rotate
+                | mg_scale
+                | mg_scale_vec
+                | mg_smooth
+                | mg_translate
             )
             (?=\()
             \b
@@ -1241,8 +1561,9 @@ contexts:
         #  "navmap.lobster"
         - match: |-
             (?x)
-            \b(
-              create_nav_map
+            \b
+            (
+                create_nav_map
             )
             (?=\()
             \b
@@ -1251,14 +1572,15 @@ contexts:
         #  "quaternion.lobster"
         - match: |-
             (?x)
-            \b(
-              quat_from_2vecs
-            | quat_from_angle_axis
-            | quat_from_euler
-            | quat_from_pitch
-            | quat_from_vec
-            | quat_from_yaw
-            | transform
+            \b
+            (
+                  quat_from_2vecs
+                | quat_from_angle_axis
+                | quat_from_euler
+                | quat_from_pitch
+                | quat_from_vec
+                | quat_from_yaw
+                | transform
             )
             (?=\()
             \b
@@ -1267,53 +1589,54 @@ contexts:
         #  "std.lobster"
         - match: |-
             (?x)
-            \b(
-              check
-            | collect
-            | connect
-            | exists
-            | fatal
-            | fatal_exit
-            | filter
-            | filter_indices
-            | find
-            | find_best
-            | flatten
-            | fold
-            | fold2
-            | fold_reverse
-            | for_bias
-            | for_range
-            | for_range_incl
-            | for_scale
-            | forever
-            | insert_ordered
-            | insertion_sort
-            | map
-            | map2
-            | nest_if
-            | partition
-            | partition_indices
-            | print
-            | product
-            | qsort
-            | qsort_in_place
-            | rec
-            | reduce
-            | reduce_reverse
-            | return_after
-            | reverse
-            | reverse_find
-            | reverse_fold
-            | reverse_list
-            | reverse_map
-            | rnd_pick
-            | rnd_pick2
-            | shuffle
-            | split
-            | sum
-            | weighted_pick
-            | zip
+            \b
+            (
+                  check
+                | collect
+                | connect
+                | exists
+                | fatal
+                | fatal_exit
+                | filter
+                | filter_indices
+                | find
+                | find_best
+                | flatten
+                | fold
+                | fold2
+                | fold_reverse
+                | for_bias
+                | for_range
+                | for_range_incl
+                | for_scale
+                | forever
+                | insert_ordered
+                | insertion_sort
+                | map
+                | map2
+                | nest_if
+                | partition
+                | partition_indices
+                | print
+                | product
+                | qsort
+                | qsort_in_place
+                | rec
+                | reduce
+                | reduce_reverse
+                | return_after
+                | reverse
+                | reverse_find
+                | reverse_fold
+                | reverse_list
+                | reverse_map
+                | rnd_pick
+                | rnd_pick2
+                | shuffle
+                | split
+                | sum
+                | weighted_pick
+                | zip
             )
             (?=\()
             \b
@@ -1322,10 +1645,11 @@ contexts:
         #  "testing.lobster"
         - match: |-
             (?x)
-            \b(
-              run_test
-            | testf
-            | testrunnerf
+            \b
+            (
+                  run_test
+                | testf
+                | testrunnerf
             )
             (?=\()
             \b
@@ -1334,12 +1658,13 @@ contexts:
         #  "texture.lobster"
         - match: |-
             (?x)
-            \b(
-              create_depth_texture
-            | loadtexturecached
-            | post_process
-            | render_to_texture
-            | render_to_texture_from
+            \b
+            (
+                  create_depth_texture
+                | loadtexturecached
+                | post_process
+                | render_to_texture
+                | render_to_texture_from
             )
             (?=\()
             \b
@@ -1348,8 +1673,13 @@ contexts:
         #  "utilui.lobster"
         - match: |-
             (?x)
-            \b(
-              ui_rendertextatlocalsize
+            \b
+            (
+                  ui_rendertextatlocalsize
+                | ui_rendertextatpixelsize
+                | ui_rendertextatpixelsize
+                | ui_text_local
+                | ui_text_pixel
             )
             (?=\()
             \b
@@ -1358,41 +1688,45 @@ contexts:
         #  "vec.lobster"
         - match: |-
             (?x)
-            \b(
-              forxy
-            | forxyz
-            | foryx
-            | mapxy
-            | mapxyz
-            | rotate2D
-            | v_xy
-            | v_xyz
-            | v_xyzw
-            | vecfromyawpitch
-            | wzyx
-            | xy
-            | xy_rnd
-            | xy_rnd_norm
-            | xy_rndi
-            | xy_v
-            | xyz
-            | xyz_rnd
-            | xyz_rnd_norm
-            | xyz_rndi
-            | xyz_v
-            | xyzw
-            | xyzw_rnd
-            | xyzw_v
-            | xz
-            | yw
-            | yx
-            | zw
-            | zyx
+            \b
+            (
+                  float3
+                | forxy
+                | forxyz
+                | foryx
+                | int3
+                | mapxy
+                | mapxyz
+                | rnd_float2
+                | rnd_float2_norm
+                | rnd_float3
+                | rnd_float3_norm
+                | rnd_float4
+                | rnd_int2
+                | rnd_int3
+                | rotate2D
+                | v_vec2
+                | v_vec3
+                | v_vec4
+                | vec2_v
+                | vec3
+                | vec3_v
+                | vec4
+                | vec4_v
+                | vecfromyawpitch
+                | wzyx
+                | xy
+                | xy
+                | xyz
+                | xz
+                | yw
+                | yx
+                | zw
+                | zyx
             )
             (?=\()
             \b
           scope: support.function.library.lobster
-
 
     #======================================================================================================================================
     Functions_User:
@@ -1400,10 +1734,9 @@ contexts:
             (?x)
             (
                 [_a-zA-Z0-9]+
-                (?=\()
+                (?=\s*\()
             )
           scope: entity.name.function.lobster
-
 
     #======================================================================================================================================
     Functions_Variable:
@@ -1412,11 +1745,10 @@ contexts:
             (
                 \.
                 [_a-zA-Z0-9]+
-                (?=\()
+                (?=(\(|\b))
             )
-            \b
+            (?=\()
           scope: variable.function.lobster
-
 
     ###########################################################################################################################################
     ###########################################################################################################################################
@@ -1429,41 +1761,65 @@ contexts:
     Types_BuiltIn:
         - match: |-
             (?x)
-            \b(
-              any
-            | bool
-            | float[2-4]?
-            | int[2-4]?
-            | resource
-            | string
-            | vector
-            | void
+            ((?<=\:)\s*)
+            (
+                  any
+                | bool
+                | float
+                | int
+                | resource
+                | string
+                | vector
+                | void
             )
-            (?!\()
-            \b
+            (?!\s*\()
           scope: storage.type.lobster
 
+        - match: |-
+            (?x)
+            \b
+            (
+                  any
+                | bool
+                | float
+                | int
+                | resource
+                | string
+                | vector
+                | void
+            )
+            (?=\s*\{)
+          scope: storage.type.lobster
 
     #======================================================================================================================================
     Types_Module:
         - match: |-
             (?x)
-            \b(
-              color
-            | xy
-            | xy_f
-            | xy_i
-            | xyz
-            | xyz_f
-            | xyz_i
-            | xyzw
-            | xyzw_f
-            | xyzw_i
+            ((?<=\:)\s*)
+            (
+                  color
+                | mat2x2
+                | mat4x4
+                | float[2-4]{1}
+                | int[2-4]{1}
+                | vec[2-4]{1}
             )
-            (?!\()
-            \b
+            (?!\s*\()
           scope: storage.type.lobster
 
+        - match: |-
+            (?x)
+            \b
+            (
+                  color
+                | mat2x2
+                | mat4x4
+                | float[2-4]{1}
+                | int[2-4]{1}
+                | vec[2-4]{1}
+            )
+            (?=\s*\{)
+          scope: storage.type.lobster
 
     ###########################################################################################################################################
     ###########################################################################################################################################
@@ -1477,14 +1833,8 @@ contexts:
         - match: \b(this)\b
           scope: variable.language.this.lobster
 
-
     #======================================================================================================================================
     Variables_User:
-        - match: |-
-            (?x)
-            (
-                [A-Za-z]{1}
-                [A-Za-z0-9_]*
-            )
+        - match: ([A-Za-z0-9_]*)
           scope: variable.other.readwrite.lobster
 
